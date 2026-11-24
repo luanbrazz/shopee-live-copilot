@@ -36,7 +36,7 @@ Extensão Manifest V3 desenvolvida sob medida e com máxima eficiência para aut
 - **Sons Sintetizados (Web Audio):** Toca acordes harmônicos elegantes no navegador para vendas e sacola.
 
 ### 4. 📌 Mensagens Periódicas (CTA) com Fixação Automática
-- Envia lembretes persuasivos de compra em intervalos configuráveis (padrão: 3 minutos).
+- Envia lembretes persuasivos de compra em intervalos configuráveis (padrão: 10 minutos).
 - Marca automaticamente a opção **"Marcar"** para fixar a mensagem no topo do chat da Shopee.
 
 ### 5. ⏱️ Timer de Encerramento Automático

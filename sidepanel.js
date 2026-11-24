@@ -90,7 +90,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnResetCartTemplates) {
     btnResetCartTemplates.addEventListener('click', () => {
       proactiveCartTemplates.value = DEFAULT_CART_TEMPLATES.join('\n');
+      if (proactiveCartEnabled) proactiveCartEnabled.checked = true;
+      if (proactiveCartCooldown) proactiveCartCooldown.value = 20;
       triggerSave();
+      showSaveToast('🛒 Fechamento de Carrinho restaurado para o padrão (Ativado, 20s).');
     });
   }
 
@@ -98,7 +101,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnResetWelcomeTemplates) {
     btnResetWelcomeTemplates.addEventListener('click', () => {
       proactiveWelcomeTemplates.value = DEFAULT_WELCOME_TEMPLATES.join('\n');
+      if (proactiveWelcomeEnabled) proactiveWelcomeEnabled.checked = false;
+      if (proactiveWelcomeCooldown) proactiveWelcomeCooldown.value = 60;
       triggerSave();
+      showSaveToast('👋 Boas-Vindas restauradas para o padrão seguro (Desativado, 60s).');
     });
   }
 
@@ -186,8 +192,24 @@ document.addEventListener('DOMContentLoaded', () => {
         cfg.ctaEnabled = true;
         needsResave = true;
       }
-      if (!cfg.ctaIntervalMin || cfg.ctaIntervalMin === 10) {
-        cfg.ctaIntervalMin = 3;
+      if (!cfg.ctaIntervalMin || cfg.ctaIntervalMin === 3) {
+        cfg.ctaIntervalMin = 10;
+        needsResave = true;
+      }
+      if (cfg.proactiveWelcomeEnabled === undefined) {
+        cfg.proactiveWelcomeEnabled = false;
+        needsResave = true;
+      }
+      if (cfg.proactiveCartEnabled === undefined) {
+        cfg.proactiveCartEnabled = true;
+        needsResave = true;
+      }
+      if (cfg.proactiveCartCooldown === undefined) {
+        cfg.proactiveCartCooldown = 20;
+        needsResave = true;
+      }
+      if (cfg.proactiveWelcomeCooldown === undefined) {
+        cfg.proactiveWelcomeCooldown = 60;
         needsResave = true;
       }
       if (needsResave) {
@@ -486,7 +508,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const cfg = res.shopeeCopilotConfig || {};
         cfg.timerRunning = false;
         cfg.timerEndTime = 0;
+        cfg.proactiveWelcomeEnabled = false; // Garante anti-spam para nova live
+        cfg.proactiveCartEnabled = true;     // Garante alta conversão ativa
+        if (!cfg.ctaIntervalMin || cfg.ctaIntervalMin === 3) {
+          cfg.ctaIntervalMin = 10;
+        }
         updateTimerDisplay(cfg);
+
+        // Atualiza controles na interface
+        if (proactiveWelcomeEnabled) proactiveWelcomeEnabled.checked = false;
+        if (proactiveCartEnabled) proactiveCartEnabled.checked = true;
+        if (ctaIntervalMin) ctaIntervalMin.value = cfg.ctaIntervalMin;
 
         chrome.storage.local.set({
           shopeeCopilotStats: emptyStats,

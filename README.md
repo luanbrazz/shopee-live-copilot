@@ -23,7 +23,7 @@ Desenvolvida como uma extensão Google Chrome moderna (Manifest V3), o **Shopee 
 - **🎯 Interação Proativa no Carrinho (`@usuario`):** Aborda automaticamente espectadores que adicionam o produto à sacola ou estão comprando, incentivando o fechamento com cupom e frete grátis.
 - **🛡️ Tratamento de Mascaramento da Shopee:** Se o nome do usuário contiver `...` (privacidade da Shopee, ex: `marcos...`), o robô formata a frase naturalmente sem arroba quebrado.
 - **⌨️ Proteção Inteligente de Digitação:** Se o apresentador estiver com o cursor focado no chat digitando um rascunho, o robô pausa e aguarda para não sobrescrever o texto humano.
-- **📌 Mensagens Periódicas (CTA) com Fixação Automática:** Envia lembretes persuasivos em intervalos programados (ex: a cada 3 minutos) marcando a caixinha **"Marcar"** para fixar no chat.
+- **📌 Mensagens Periódicas (CTA) com Fixação Automática:** Envia lembretes persuasivos em intervalos programados (padrão seguro: a cada 10 minutos) marcando a caixinha **"Marcar"** para fixar no chat.
 - **🔔 Notificações Push no Celular (`ntfy.sh`):** Alertas sonoros instantâneos no seu celular quando alguém compra ou coloca produto na sacola.
 - **⏱️ Timer de Encerramento Automático:** Programa a duração da live e clica automaticamente em *"Finalizar Transmissão"* ao zerar o cronômetro.
 - **📡 Watchdog Anti-Queda:** Monitora o player de vídeo da Shopee. Se o OBS travar por mais de 30 segundos, dispara alerta de emergência.
@@ -154,7 +154,7 @@ PRODUTO PRINCIPAL DA LIVE (LOJA OFICIAL):
   - `@usuario Vi que você garantiu na sacola! Aproveite o cupom da live + Frete Grátis antes de finalizar no carrinho 🛒✨`
 
 ### C. Mensagens Periódicas (CTA)
-- Defina o intervalo desejado (ex: `3 minutos`).
+- Defina o intervalo desejado (padrão seguro: `10 minutos` para evitar spam no chat).
 - A extensão enviará mensagens alternadas e marcará automaticamente a caixinha **"Marcar"** para mantê-las fixadas no topo do chat.
 
 ### D. Alertas no Celular via ntfy (Vendas e Sacolinha em Tempo Real)

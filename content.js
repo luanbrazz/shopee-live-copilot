@@ -32,7 +32,7 @@
       playChimes: true,
       timerRunning: false,
       timerEndTime: 0,
-      ctaIntervalMin: 3,
+      ctaIntervalMin: 10, // Padrão seguro de 10 minutos para evitar flood
       ctaEnabled: true,
       ctaMessages: [
         '🔥 Toque no Produto 1 na Sacola Laranja para resgatar seu Cupom Exclusivo de Live!',
