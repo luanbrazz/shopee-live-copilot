@@ -212,13 +212,21 @@ document.addEventListener('DOMContentLoaded', () => {
         cfg.proactiveWelcomeCooldown = 60;
         needsResave = true;
       }
+
+      // Recupera chave de API: storage local > env.js local
+      const localEnvKey = (typeof window !== 'undefined' && window.__ENV_GEMINI_KEY__) || '';
+      if (!cfg.geminiApiKey && localEnvKey) {
+        cfg.geminiApiKey = localEnvKey;
+        needsResave = true;
+      }
+
       if (needsResave) {
         chrome.storage.local.set({ shopeeCopilotConfig: cfg });
       }
 
       // Popula campos
       aiEnabled.checked = cfg.aiEnabled !== false;
-      geminiApiKey.value = cfg.geminiApiKey || '';
+      geminiApiKey.value = cfg.geminiApiKey || localEnvKey || '';
       geminiModel.value = cfg.geminiModel || 'gemini-flash-lite-latest';
       aiCooldown.value = cfg.aiCooldown || 8;
       productContext.value = cfg.productContext || DEFAULT_PRODUCT_CONTEXT;
@@ -328,7 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     return {
       aiEnabled: aiEnabled.checked,
-      geminiApiKey: geminiApiKey.value.trim(),
+      geminiApiKey: geminiApiKey.value.trim() || ((typeof window !== 'undefined' && window.__ENV_GEMINI_KEY__) || ''),
       geminiModel: geminiModel.value,
       aiCooldown: parseInt(aiCooldown.value, 10) || 8,
       productContext: productContext.value.trim(),

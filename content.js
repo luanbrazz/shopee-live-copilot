@@ -273,9 +273,16 @@
 
   // Detecta o nome do vendedor/host logado para não responder a si próprio
   function detectHostUser() {
-    const userEl = document.querySelector('.user-info_c8e96, [class*="user-name_"], [class*="header_"]');
-    if (userEl && userEl.textContent) {
-      state.currentHostUser = userEl.textContent.trim().toLowerCase();
+    // Busca exclusivamente no cabeçalho superior direito da Shopee Live (fora do container de chat!)
+    const headerProfile = document.querySelector('.header-right, [class*="header_right"], [class*="userInfo_"], [class*="account-info"]');
+    if (headerProfile) {
+      const nameEl = headerProfile.querySelector('[class*="name_"], [class*="title_"]');
+      if (nameEl && nameEl.textContent) {
+        const text = nameEl.textContent.trim().toLowerCase();
+        if (text && !text.includes('painel') && !text.includes('live')) {
+          state.currentHostUser = text;
+        }
+      }
     }
   }
 
@@ -538,7 +545,7 @@
 
     const author = authorEl.textContent.trim();
     const message = msgEl.textContent.trim();
-    const commentId = el.getAttribute('data-comment-id') || (author + '_' + message);
+    const commentId = el.getAttribute('data-comment-id') || (author + '_' + message + '_' + Math.floor(now / 30000));
 
     // 3. Deduplicação com cache de memória (evita duplicar ao rolar a lista virtualizada)
     const now = Date.now();
@@ -553,9 +560,10 @@
       oldestKeys.forEach(k => state.processedComments.delete(k));
     }
 
-    // 4. Ignora se for o próprio apresentador falando (tem selo Apresentador ou usuário idêntico)
+    // 4. Ignora se for o próprio apresentador falando (tem selo Apresentador oficial no comentário)
     const isHostMessage = !!el.querySelector('[class*="host"], [class*="anchor"], [class*="seller"]') ||
                           (el.textContent && el.textContent.includes('Apresentador')) ||
+                          author.toLowerCase() === 'apresentador' ||
                           (state.currentHostUser && author.toLowerCase() === state.currentHostUser);
     if (isHostMessage) {
       return;
@@ -594,10 +602,18 @@
       return;
     }
 
+    // 9. Verifica se a chave de API está configurada
+    if (!state.config.geminiApiKey) {
+      console.warn('[ShopeeCopilot AI] Nenhuma chave Gemini configurada no storage.');
+      logEvent('warning', '⚠️ Chave Gemini Ausente', 'Configure sua chave do Gemini na aba "IA & Produto" do painel lateral para a IA responder.');
+      state.processedComments.delete(commentId);
+      return;
+    }
+
     console.log(`[ShopeeCopilot AI] Dúvida detectada de @${author}: "${message}"`);
     state.lastAiReplyTime = now;
 
-    // 9. Chama a IA Gemini
+    // 10. Chama a IA Gemini
     if (window.ShopeeLiveAI && window.ShopeeLiveAI.generateAnswer) {
       const answer = await window.ShopeeLiveAI.generateAnswer({
         apiKey: state.config.geminiApiKey,
@@ -608,7 +624,7 @@
         question: message
       });
 
-      if (answer) {
+      if (answer && answer.trim() !== 'IGNORE') {
         const fullResponse = `@${author} ${answer}`.substring(0, 145);
         typeAndSendMessage(fullResponse, false);
 
@@ -617,6 +633,9 @@
         updateFloatingWidget();
 
         logEvent('ai', `Resposta IA para @${author}`, `P: "${message}" ➔ R: "${answer}"`);
+      } else if (!answer) {
+        // Se a chamada falhou ou não retornou resposta, remove do cache para permitir retry
+        state.processedComments.delete(commentId);
       }
     }
   }
