@@ -133,8 +133,13 @@
     state.lastAiReplyTime = 0;
     state.lastCtaTime = Date.now() - (2.5 * 60 * 1000);
 
+    // Reseta também o cronômetro na página
+    state.config.timerRunning = false;
+    state.config.timerEndTime = 0;
+
     chrome.storage.local.set({
-      shopeeCopilotStats: state.stats
+      shopeeCopilotStats: state.stats,
+      shopeeCopilotConfig: state.config
     }, () => {
       updateFloatingWidget();
       logEvent('info', '🔄 Sessão Reiniciada', 'Todas as métricas da live foram zeradas com sucesso.');
