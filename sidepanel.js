@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const statCartCount = document.getElementById('statCartCount');
   const statSalesCount = document.getElementById('statSalesCount');
   const statProactiveCount = document.getElementById('statProactiveCount');
+  const btnResetAll = document.getElementById('btnResetAll');
 
   // Tab IA
   const aiEnabled = document.getElementById('aiEnabled');
@@ -455,6 +456,59 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     });
   });
+
+  // --- Botão "Zerar Tudo" (Resetar Sessão para Nova Live) ---
+  if (btnResetAll) {
+    btnResetAll.addEventListener('click', () => {
+      const confirmReset = confirm(
+        '⚠️ DESEJA ZERAR TUDO PARA UMA NOVA LIVE?\n\n' +
+        '• Contadores de Sacola e Carrinho voltarão a 0\n' +
+        '• Métricas de Vendas e Respostas da IA voltarão a 0\n' +
+        '• Histórico de Logs Ao Vivo será limpo\n' +
+        '• Cronômetro será reiniciado\n\n' +
+        'Clique em OK para confirmar.'
+      );
+      if (!confirmReset) return;
+
+      const emptyStats = {
+        questionsAnswered: 0,
+        cartEvents: 0,
+        purchasesDetected: 0,
+        proactiveInteractions: 0,
+        uptimeSeconds: 0
+      };
+
+      activeLogs = [];
+      renderLogs(activeLogs);
+      updateStatsUI(emptyStats);
+
+      chrome.storage.local.get(['shopeeCopilotConfig'], res => {
+        const cfg = res.shopeeCopilotConfig || {};
+        cfg.timerRunning = false;
+        cfg.timerEndTime = 0;
+        updateTimerDisplay(cfg);
+
+        chrome.storage.local.set({
+          shopeeCopilotStats: emptyStats,
+          shopeeCopilotLogs: [],
+          shopeeCopilotConfig: cfg
+        }, () => {
+          showSaveToast('✨ Tudo zerado com sucesso! Pronto para nova live.');
+        });
+      });
+
+      // Notifica as abas da Shopee para zerarem os contadores da página
+      chrome.tabs.query({ url: '*://live.shopee.com.br/*' }, tabs => {
+        tabs.forEach(tab => {
+          chrome.tabs.sendMessage(tab.id, { type: 'RESET_ALL' }, () => {
+            if (chrome.runtime.lastError) { /* ignore */ }
+          });
+        });
+      });
+
+      chrome.runtime.sendMessage({ type: 'UPDATE_STATS', payload: emptyStats });
+    });
+  }
 
   // --- Ouvinte de Mensagens em Tempo Real da Extensão ---
   chrome.runtime.onMessage.addListener(msg => {

@@ -104,3 +104,27 @@
   color: #ffffff;
   font-weight: 700;
 }
+
+.sc-btn-reset {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
+  border-radius: 9999px;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 11px;
+  padding: 0;
+  margin-left: 3px;
+  transition: all 0.2s ease;
+}
+
+.sc-btn-reset:hover {
+  background: rgba(239, 68, 68, 0.28);
+  border-color: #ef4444;
+  color: #ffffff;
+  transform: rotate(180deg);
+}

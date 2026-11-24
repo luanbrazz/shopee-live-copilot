@@ -98,9 +98,55 @@
 
   // Ouvinte de alterações do Storage em tempo real
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === 'local' && changes.shopeeCopilotConfig) {
-      state.config = { ...state.config, ...changes.shopeeCopilotConfig.newValue };
+    if (area === 'local') {
+      if (changes.shopeeCopilotConfig) {
+        state.config = { ...state.config, ...changes.shopeeCopilotConfig.newValue };
+        updateFloatingWidget();
+      }
+      if (changes.shopeeCopilotStats) {
+        state.stats = { ...state.stats, ...(changes.shopeeCopilotStats.newValue || {
+          questionsAnswered: 0,
+          cartEvents: 0,
+          purchasesDetected: 0,
+          proactiveInteractions: 0,
+          uptimeSeconds: 0
+        }) };
+        updateFloatingWidget();
+      }
+    }
+  });
+
+  // Função para reiniciar todos os dados e contadores da sessão
+  function resetAllSessionData() {
+    state.stats = {
+      questionsAnswered: 0,
+      cartEvents: 0,
+      purchasesDetected: 0,
+      proactiveInteractions: 0,
+      uptimeSeconds: 0
+    };
+    state.processedComments.clear();
+    state.processedEvents.clear();
+    userInteractedMap.clear();
+    lastCartInteractionTime = 0;
+    lastWelcomeInteractionTime = 0;
+    state.lastAiReplyTime = 0;
+    state.lastCtaTime = Date.now() - (2.5 * 60 * 1000);
+
+    chrome.storage.local.set({
+      shopeeCopilotStats: state.stats
+    }, () => {
       updateFloatingWidget();
+      logEvent('info', '🔄 Sessão Reiniciada', 'Todas as métricas da live foram zeradas com sucesso.');
+      chrome.runtime.sendMessage({ type: 'UPDATE_STATS', payload: state.stats });
+    });
+  }
+
+  // Ouvinte de mensagens diretas do Side Panel
+  chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+    if (msg.type === 'RESET_ALL') {
+      resetAllSessionData();
+      if (sendResponse) sendResponse({ success: true });
     }
   });
 
@@ -776,9 +822,20 @@
         <span class="sc-metric" title="Vendas">💰 <b id="sc-pill-sales">0</b></span>
         <span class="sc-metric" title="Respostas IA">🤖 <b id="sc-pill-ai">0</b></span>
         <span class="sc-metric" title="Interações Proativas">🎯 <b id="sc-pill-proactive">0</b></span>
+        <button type="button" class="sc-btn-reset" id="sc-btn-reset-session" title="Zerar métricas para nova live">🔄</button>
       </div>
     `;
     document.body.appendChild(widgetEl);
+
+    const btnResetFloat = widgetEl.querySelector('#sc-btn-reset-session');
+    if (btnResetFloat) {
+      btnResetFloat.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (confirm('⚠️ Deseja zerar todas as métricas e contadores de sacola para iniciar uma nova live?')) {
+          resetAllSessionData();
+        }
+      });
+    }
     updateFloatingWidget();
   }
 
