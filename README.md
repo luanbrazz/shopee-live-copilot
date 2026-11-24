@@ -157,11 +157,36 @@ PRODUTO PRINCIPAL DA LIVE (LOJA OFICIAL):
 - Defina o intervalo desejado (ex: `3 minutos`).
 - A extensão enviará mensagens alternadas e marcará automaticamente a caixinha **"Marcar"** para mantê-las fixadas no topo do chat.
 
-### D. Alertas no Celular via ntfy (Opcional)
-1. Instale o aplicativo gratuito **ntfy** no seu celular ([Android](https://play.google.com/store/apps/details?id=io.heckel.ntfy) ou [iOS](https://apps.apple.com/app/ntfy/id1625396347)).
-2. Crie um nome de tópico exclusivo (ex: `shopee_live_minhaloja_789`) e inscreva-se nele no app.
-3. No painel da extensão, insira esse mesmo tópico e clique em *"Testar Notificação"*.
-4. Você receberá notificações sonoras no celular a cada venda e sacola adicionada!
+### D. Alertas no Celular via ntfy (Vendas e Sacolinha em Tempo Real)
+
+O **ntfy** é um aplicativo 100% gratuito, de código aberto e que não exige cadastro nem login. Ele recebe notificações push instantâneas no seu smartphone sempre que alguém **comprar** ou **adicionar um produto à sacola** na sua transmissão.
+
+#### 📱 Passo a Passo no Smartphone:
+1. **Instale o aplicativo ntfy:**
+   - [Baixar para Android na Google Play Store](https://play.google.com/store/apps/details?id=io.heckel.ntfy)
+   - [Baixar para iPhone na Apple App Store](https://apps.apple.com/app/ntfy/id1625396347)
+2. **Abra o aplicativo e crie o seu canal:**
+   - Na tela inicial do app, toque no botão **`+`** (ou *"Subscribe to topic"* / *"Inscrever-se no tópico"*).
+   - **Nome do Tópico:** Crie um nome único e difícil de adivinhar (ex: `shopee_live_minhaloja_9821` ou `shopee_alertas_seunome_773`).
+     > 💡 *Dica:* Como os tópicos no servidor padrão `ntfy.sh` são abertos, evite nomes óbvios como `shopee` ou `teste` para que ninguém veja suas notificações.
+   - Deixe o servidor padrão como `ntfy.sh`.
+   - Toque em **"Subscribe"** (Inscrever-se).
+
+#### 💻 Vinculando na Extensão:
+1. No Google Chrome, abra o painel do **Shopee Live Copilot** e vá até a aba **🔔 Notificações**.
+2. Marque a opção **"Ativar Alertas Push (ntfy.sh)"**.
+3. No campo **Tópico ntfy**, digite o **mesmo nome** que você cadastrou no smartphone (ex: `shopee_live_minhaloja_9821`).
+4. Clique no botão **"Testar Notificação"**.
+5. Seu smartphone vai vibrar e tocar instantaneamente com a mensagem de teste!
+
+#### ⚙️ Dicas para Nunca Perder um Alerta Durante a Live:
+- **Android (Evitar que o sistema feche o app):**
+  - Vá em *Configurações do Celular ➔ Aplicativos ➔ ntfy ➔ Bateria*.
+  - Altere de *Otimizado* para **"Sem restrições"** (ou *"Não otimizar"*).
+  - Em *Notificações ➔ Categorias*, garanta que o som esteja no volume máximo.
+- **iPhone / iOS:**
+  - Vá em *Ajustes ➔ ntfy ➔ Notificações*.
+  - Ative **"Notificações Relevantes / Alertas Imediatos"** e ative o som.
 
 ---
 
