@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "Shopee Live Copilot",
+  "version": "1.0.0",
+  "description": "Automação inteligente para Shopee Live: Resposta IA Gemini, Notificações Push ntfy de Vendas/Sacola, Timer e Watchdog",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": [
+    "storage",
+    "alarms",
+    "sidePanel"
+  ],
+  "host_permissions": [
+    "https://live.shopee.com.br/*",
+    "https://generativelanguage.googleapis.com/*",
+    "https://ntfy.sh/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "side_panel": {
+    "default_path": "sidepanel.html"
+  },
+  "action": {
+    "default_title": "Abrir Shopee Live Copilot",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://live.shopee.com.br/*"
+      ],
+      "js": [
+        "ai.js",
+        "content.js"
+      ],
+      "css": [
+        "content.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

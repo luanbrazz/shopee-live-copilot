@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shopee Live Copilot</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-brand">
+        <div class="logo-box">
+          <span class="logo-icon">🚀</span>
+        </div>
+        <div class="header-titles">
+          <h1>Shopee Live Copilot</h1>
+          <span class="badge-status" id="headerStatus">
+            <span class="status-indicator"></span> Ativo na Shopee
+          </span>
+        </div>
+      </div>
+      <div class="header-quick-stats">
+        <div class="stat-pill" title="Perguntas Respondidas por IA">
+          <span>🤖</span> <b id="statAiCount">0</b>
+        </div>
+        <div class="stat-pill" title="Itens na Sacolinha">
+          <span>🛒</span> <b id="statCartCount">0</b>
+        </div>
+        <div class="stat-pill highlight" title="Vendas Confirmadas">
+          <span>💰</span> <b id="statSalesCount">0</b>
+        </div>
+        <div class="stat-pill" title="Interações Proativas (@usuario)">
+          <span>🎯</span> <b id="statProactiveCount">0</b>
+        </div>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-tab="tab-ai">
+        <span class="tab-icon">🤖</span> IA & Produto
+      </button>
+      <button class="tab-btn" data-tab="tab-ntfy">
+        <span class="tab-icon">🔔</span> Notificações
+      </button>
+      <button class="tab-btn" data-tab="tab-timer">
+        <span class="tab-icon">🎯</span> Interação & Timer
+      </button>
+      <button class="tab-btn" data-tab="tab-logs">
+        <span class="tab-icon">📋</span> Logs Ao Vivo
+      </button>
+    </nav>
+
+    <!-- Main Content Tab Panes -->
+    <main class="tab-content-area">
+
+      <!-- ================= TAB 1: IA & PRODUTO ================= -->
+      <section id="tab-ai" class="tab-pane active">
+        <!-- Switch Ativar IA -->
+        <div class="card switch-card">
+          <div class="card-info">
+            <span class="card-title">Respostas Automáticas com IA</span>
+            <span class="card-desc">Responde dúvidas reais de compradores em menos de 130 caracteres</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="aiEnabled" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- Credenciais Gemini -->
+        <div class="card">
+          <h3 class="section-title">Google Gemini API</h3>
+          <div class="form-group">
+            <label for="geminiApiKey">Chave de API Gemini (API Key):</label>
+            <div class="input-with-button">
+              <input type="password" id="geminiApiKey" placeholder="Chave de API (ou use padrão)">
+              <button type="button" class="btn-icon" id="btnToggleApiKey" title="Mostrar/Ocultar Chave">👁️</button>
+            </div>
+            <span class="input-hint">Deixe em branco para usar a chave padrão já configurada.</span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="geminiModel">Modelo:</label>
+              <select id="geminiModel">
+                <option value="gemini-flash-lite-latest" selected>Gemini Flash Lite (Ultrarrápido - Recomendado)</option>
+                <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash Lite (Estável)</option>
+                <option value="gemini-2.5-flash">Gemini 2.5 Flash</option>
+              </select>
+            </div>
+            <div class="form-group" style="width: 100px;">
+              <label for="aiCooldown">Intervalo (s):</label>
+              <input type="number" id="aiCooldown" value="8" min="3" max="60">
+            </div>
+          </div>
+        </div>
+
+        <!-- Contexto do Produto -->
+        <div class="card">
+          <div class="card-header-flex">
+            <h3 class="section-title">Contexto Oficial do Produto</h3>
+            <button type="button" class="btn-text-action" id="btnResetContext">Restaurar Mochila 45L</button>
+          </div>
+          <span class="input-hint">A IA usará estes dados para responder (sem citar valores fixos em R$, direcionando para a sacola):</span>
+          <textarea id="productContext" rows="7" placeholder="Descreva o produto, benefícios, cores, envio, dimensões..."></textarea>
+        </div>
+
+        <!-- Instruções de Postura / Estilo -->
+        <div class="card">
+          <h3 class="section-title">Estilo da Assistente</h3>
+          <input type="text" id="systemPrompt" value="Seja simpática, rápida, persuasiva e direta ao ponto." placeholder="Ex: Seja bem animada e chame sempre para a Sacola Laranja">
+        </div>
+      </section>
+
+      <!-- ================= TAB 2: NOTIFICAÇÕES (NTFY) ================= -->
+      <section id="tab-ntfy" class="tab-pane">
+        <!-- Servidor e Tópico ntfy -->
+        <div class="card">
+          <h3 class="section-title">Configurações de Push (ntfy.sh)</h3>
+          <div class="form-group">
+            <label for="ntfyServer">Servidor ntfy:</label>
+            <input type="text" id="ntfyServer" value="https://ntfy.sh">
+          </div>
+          <div class="form-group">
+            <label for="ntfyTopic">Nome do Tópico Privado:</label>
+            <div class="input-with-button">
+              <input type="text" id="ntfyTopic" placeholder="ex: shopee_live_minhaloja_982">
+              <button type="button" class="btn-secondary" id="btnGenerateTopic">Gerar Aleatório</button>
+            </div>
+            <span class="input-hint">Instale o app <b>ntfy</b> no celular e inscreva-se neste tópico para receber notificações sonoras instantâneas.</span>
+          </div>
+
+          <div class="btn-group-row">
+            <button type="button" class="btn-primary full-width" id="btnTestNtfy">
+              🔔 Disparar Notificação de Teste no Celular
+            </button>
+          </div>
+        </div>
+
+        <!-- Gatilhos de Notificação -->
+        <div class="card">
+          <h3 class="section-title">Gatilhos de Alerta</h3>
+          
+          <div class="switch-row">
+            <div class="switch-meta">
+              <span class="meta-label">🎉 Nova Compra Finalizada</span>
+              <span class="meta-sub">Notificação urgente quando alguém comprar na live</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="notifyPurchases" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="switch-row">
+            <div class="switch-meta">
+              <span class="meta-label">🛒 Adicionou à Sacolinha</span>
+              <span class="meta-sub">Alerta de alta prioridade quando colocarem no carrinho</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="notifyCart" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="switch-row">
+            <div class="switch-meta">
+              <span class="meta-label">⚠️ Watchdog: Vídeo/Stream Travada</span>
+              <span class="meta-sub">Alerta se a transmissão ficar congelada por +30 segundos</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="notifyWatchdog" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="switch-row">
+            <div class="switch-meta">
+              <span class="meta-label">🔊 Sons no Navegador (Chimes)</span>
+              <span class="meta-sub">Tocar aviso sonoro sutil no PC ao detectar venda/carrinho</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="playChimes" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 3: INTERAÇÃO & TIMER ================= -->
+      <section id="tab-timer" class="tab-pane">
+        <!-- Interação Automática (Carrinho & Boas-Vindas) -->
+        <div class="card">
+          <div class="card-header-flex">
+            <h3 class="section-title">Interação Proativa (@usuário)</h3>
+            <span class="badge-tag">Alta Conversão</span>
+          </div>
+          <span class="input-hint">Aborda o comprador no chat quando ele coloca na sacola ou entra na live:</span>
+
+          <!-- Gatilho 1: Carrinho / Compra / Produto -->
+          <div class="switch-row">
+            <div class="switch-meta">
+              <span class="meta-label">🛒 Fechamento de Carrinho & Sacola</span>
+              <span class="meta-sub">Envia mensagem direcionada a quem adicionou à sacola ou comprou</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="proactiveCartEnabled" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <!-- Gatilho 2: Boas-vindas para 'entrou!' -->
+          <div class="switch-row">
+            <div class="switch-meta">
+              <span class="meta-label">👋 Boas-Vindas para Novos Espectadores</span>
+              <span class="meta-sub">Anti-Spam: Respeita limite global estrito de 1 envio a cada 60s</span>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="proactiveWelcomeEnabled">
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <!-- Cooldowns -->
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="proactiveCartCooldown">Intervalo Carrinho (s):</label>
+              <input type="number" id="proactiveCartCooldown" value="20" min="10" max="180">
+            </div>
+            <div class="form-group flex-1">
+              <label for="proactiveWelcomeCooldown">Intervalo Boas-Vindas (s):</label>
+              <input type="number" id="proactiveWelcomeCooldown" value="60" min="30" max="300">
+            </div>
+          </div>
+
+          <!-- Templates de Fechamento de Carrinho -->
+          <div class="form-group">
+            <div class="card-header-flex">
+              <label for="proactiveCartTemplates">Templates de Carrinho / Sacola:</label>
+              <button type="button" class="btn-text-action" id="btnResetCartTemplates">Restaurar Padrão</button>
+            </div>
+            <span class="input-hint">Use <code>{user}</code> para @usuario (removido se for mascarado pela Shopee):</span>
+            <textarea id="proactiveCartTemplates" rows="4" placeholder="Uma mensagem por linha..."></textarea>
+          </div>
+
+          <!-- Templates de Boas-Vindas -->
+          <div class="form-group">
+            <div class="card-header-flex">
+              <label for="proactiveWelcomeTemplates">Templates de Boas-Vindas:</label>
+              <button type="button" class="btn-text-action" id="btnResetWelcomeTemplates">Restaurar Padrão</button>
+            </div>
+            <span class="input-hint">Mensagens amigáveis para quem entra na live:</span>
+            <textarea id="proactiveWelcomeTemplates" rows="3" placeholder="Uma mensagem por linha..."></textarea>
+          </div>
+        </div>
+
+        <!-- Mensagens de CTA Periódicas e Fixação -->
+        <div class="card">
+          <div class="card-header-flex">
+            <h3 class="section-title">Mensagens Periódicas (CTA)</h3>
+            <label class="toggle-switch">
+              <input type="checkbox" id="ctaEnabled">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <span class="input-hint">Envia mensagens persuasivas de tempos em tempos no chat da live.</span>
+
+          <div class="form-row">
+            <div class="form-group flex-1">
+              <label for="ctaIntervalMin">Intervalo entre CTAs (min):</label>
+              <input type="number" id="ctaIntervalMin" value="10" min="2" max="60">
+            </div>
+            <div class="form-group flex-1" style="display: flex; align-items: flex-end; padding-bottom: 6px;">
+              <label class="checkbox-label">
+                <input type="checkbox" id="ctaPinEnabled" checked>
+                <span>Fixar ("Marcar")</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="ctaMessages">Mensagens (uma por linha):</label>
+            <textarea id="ctaMessages" rows="4" placeholder="Uma mensagem por linha..."></textarea>
+          </div>
+        </div>
+
+        <!-- Timer Automático de Encerramento -->
+        <div class="card">
+          <h3 class="section-title">Timer de Encerramento Automático</h3>
+          <span class="input-hint">Encerra a live na Shopee e clica na confirmação automaticamente ao zerar:</span>
+
+          <div class="timer-display-box" id="timerBox">
+            <span class="timer-digits" id="timerDigits">00:00:00</span>
+            <span class="timer-sub" id="timerStatusLabel">Timer parado</span>
+          </div>
+
+          <div class="form-row timer-controls" id="timerInputsRow">
+            <div class="form-group flex-1">
+              <label for="timerMinutes">Duração (Minutos):</label>
+              <input type="number" id="timerMinutes" value="60" min="1" max="720">
+            </div>
+            <button type="button" class="btn-primary" id="btnStartTimer">▶️ Iniciar Timer</button>
+            <button type="button" class="btn-danger" id="btnCancelTimer" style="display: none;">⏹️ Cancelar</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TAB 4: LOGS EM TEMPO REAL ================= -->
+      <section id="tab-logs" class="tab-pane">
+        <div class="logs-header-bar">
+          <span class="logs-title">Atividades Recentes</span>
+          <div class="logs-actions">
+            <button type="button" class="btn-text-action" id="btnClearLogs">Limpar</button>
+          </div>
+        </div>
+
+        <div class="logs-container" id="logsList">
+          <div class="empty-logs">Nenhum evento registrado ainda. Abra a Shopee Live para iniciar o monitoramento.</div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer Save Notification -->
+    <footer class="app-footer">
+      <span class="save-status" id="saveStatus">💾 Configurações salvas automaticamente</span>
+      <button type="button" class="btn-primary-small" id="btnForceSave">Salvar Agora</button>
+    </footer>
+  </div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>
