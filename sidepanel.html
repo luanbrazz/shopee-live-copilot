@@ -108,7 +108,7 @@
             <button type="button" class="btn-text-action" id="btnResetContext">Restaurar Mochila 45L</button>
           </div>
           <span class="input-hint">A IA usará estes dados para responder (sem citar valores fixos em R$, direcionando para a sacola):</span>
-          <textarea id="productContext" rows="7" placeholder="Descreva o produto, benefícios, cores, envio, dimensões..."></textarea>
+          <textarea id="productContext" rows="10" placeholder="Descreva o produto, benefícios, cores, envio, dimensões..."></textarea>
         </div>
 
         <!-- Instruções de Postura / Estilo -->
@@ -246,7 +246,7 @@
               <button type="button" class="btn-text-action" id="btnResetCartTemplates">Restaurar Padrão</button>
             </div>
             <span class="input-hint">Use <code>{user}</code> para @usuario (removido se for mascarado pela Shopee):</span>
-            <textarea id="proactiveCartTemplates" rows="4" placeholder="Uma mensagem por linha..."></textarea>
+            <textarea id="proactiveCartTemplates" rows="6" placeholder="Uma mensagem por linha..."></textarea>
           </div>
 
           <!-- Templates de Boas-Vindas -->
@@ -256,7 +256,7 @@
               <button type="button" class="btn-text-action" id="btnResetWelcomeTemplates">Restaurar Padrão</button>
             </div>
             <span class="input-hint">Mensagens amigáveis para quem entra na live:</span>
-            <textarea id="proactiveWelcomeTemplates" rows="3" placeholder="Uma mensagem por linha..."></textarea>
+            <textarea id="proactiveWelcomeTemplates" rows="6" placeholder="Uma mensagem por linha..."></textarea>
           </div>
         </div>
 
@@ -285,8 +285,11 @@
           </div>
 
           <div class="form-group">
-            <label for="ctaMessages">Mensagens (uma por linha):</label>
-            <textarea id="ctaMessages" rows="4" placeholder="Uma mensagem por linha..."></textarea>
+            <div class="card-header-flex">
+              <label for="ctaMessages">Mensagens (uma por linha):</label>
+              <button type="button" class="btn-text-action" id="btnResetCtaMessages">Restaurar Padrão</button>
+            </div>
+            <textarea id="ctaMessages" rows="8" placeholder="Uma mensagem por linha..."></textarea>
           </div>
         </div>
 

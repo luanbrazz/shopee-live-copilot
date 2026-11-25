@@ -54,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const ctaIntervalMin = document.getElementById('ctaIntervalMin');
   const ctaPinEnabled = document.getElementById('ctaPinEnabled');
   const ctaMessages = document.getElementById('ctaMessages');
+  const btnResetCtaMessages = document.getElementById('btnResetCtaMessages');
 
   // Tab Logs
   const logsList = document.getElementById('logsList');
@@ -63,27 +64,63 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveStatus = document.getElementById('saveStatus');
   const btnForceSave = document.getElementById('btnForceSave');
 
-  // --- Contexto Padrão da Mochila Romantic Crown 42L/45L Shopee ---
+  // --- Contexto Padrão da Mochila Romantic Crown 42L/45L Shopee (Ultra Robusto) ---
   const DEFAULT_PRODUCT_CONTEXT = `PRODUTO PRINCIPAL DA LIVE (ROMANTIC CROWN ORIGINAL):
-- Nome: Mochila de Viagem Expansível Executiva (Cabine ANAC)
-- Capacidade: Expansível de 33L para 45L (zíper expansor que aumenta a profundidade de 12cm para 22cm)
-- Padrão Cabine ANAC: Dimensões 45 x 32cm aprovadas para viajar a bordo de avião sem pagar taxa de despacho!
-- Compartimento Notebook: Bolso acolchoado especial para notebook de até 17.3 polegadas
-- Cores disponíveis: Preto, Branco (Off-White), Cinza e Rosa
-- Recursos: Bolso impermeável para calçados/roupas úmidas, saída USB para carregar celular, zíperes reforçados antifurto, tecido resistente à água
-- Envio: Pronta entrega com estoque direto de São Paulo (SP) e postagem rápida em até 24h
-- Preço e Oferta: MEGA DESCONTO EXCLUSIVO DE LIVE! REGRA CRÍTICA: NUNCA mencione valores em reais (R$). Cada comprador tem cupons, moedas e frete personalizados. Oriente sempre o cliente a tocar na Sacola Laranja (Produto 1) para resgatar o cupom de live e ver o valor final com desconto no carrinho!`;
+- Nome Oficial: Mochila de Viagem Expansível Executiva Romantic Crown (Mochila Mala 45L Cabine ANAC).
+- Reputação: Nota 5.0 estrelas, mais de 55 mil avaliações positivas e mais de 100 mil unidades vendidas!
+- Padrão Cabine ANAC (Mala de Bordo): Medidas 45 x 32 x 22 cm (expandida) e 45 x 32 x 12 cm (compacta). 100% aprovada para viajar a bordo de avião como bagagem de mão/cabine sem pagar taxa de despacho! Cabe no bagageiro superior e abaixo do assento.
+- Capacidade Expansível: De 33L para 45L pelo zíper expansor (+10cm de profundidade). Super espaçosa para roupas de 3 a 5 dias de viagem.
+- Cores Disponíveis: Preto, Branco (Off-White), Cinza e Rosa. Todas a pronta entrega na Sacola Laranja.
+- Compartimento para Notebook: Bolso acolchoado especial para notebook de até 17,3 polegadas e tablet/iPad, com trava de segurança elástica.
+- Porta USB Externa: Conector USB lateral para carregar celular na rua (acompanha cabo interno para plugar no powerbank).
+- Impermeabilidade e Material: Tecido Poliéster Oxford premium impermeável resistente à chuva, respingos e arranhões. Zíperes duplos de metal reforçados.
+- Abertura 180° Estilo Mala: Abre completamente como mala de viagem para arrumar roupas com facilidade e passar no raio-X de aeroportos.
+- Alça para Mala de Rodinhas: Faixa traseira resistente para acoplar no puxador da mala de viagem.
+- Bolso Antifurto: Bolso oculto nas costas com zíper seguro para guardar passaporte, celular, carteira e dinheiro.
+- Conforto Ergonômico: Costas e alças acolchoadas com tecido respirável antitranspirante (malha aerada) que alivia o peso nos ombros.
+- Divisórias Internas: Bolsos organizadores para cabos, canetas, documentos e bolso impermeável para itens úmidos ou necessaire.
+- Público e Uso: Unissex (masculino e feminino). Perfeita para trabalho executivo, faculdade, viagens de avião, negócios e passeios.
+- Origem e Envio: Estoque próprio a pronta entrega no Brasil, envio ultra-rápido direto de São Paulo (SP) em até 24 horas úteis.
+- Garantia: 30 dias de garantia do vendedor contra qualquer defeito + Garantia Shopee de recebimento seguro.
+- REGRA CRÍTICA DE PREÇO: NUNCA informe valores fixos em R$. Oriente sempre o cliente a abrir a Sacola Laranja (Produto 1) para resgatar o Cupom Exclusivo da Live + Frete Grátis e ver o valor final com desconto no carrinho!`;
 
   // --- Templates Padrão de Interação Proativa ---
   const DEFAULT_CART_TEMPLATES = [
     '{user} Vi que você garantiu na sacola! Aproveite o cupom da live + Frete Grátis antes de finalizar no carrinho 🛒✨',
     '{user} Ótima escolha! Nossa mochila tem envio rápido de SP em até 24h e garantia de 30 dias. Qualquer dúvida só chamar 👇',
-    '{user} Dica: resgate o cupom exclusivo da live na Sacola Laranja para garantir o melhor desconto no seu pedido! 🎟️'
+    '{user} Dica: resgate o cupom exclusivo da live na Sacola Laranja para garantir o melhor desconto no seu pedido! 🎟️',
+    '{user} Parabéns pela escolha! A Romantic Crown original tem abertura 180° estilo mala e bolso antifurto ✈️',
+    '{user} Excelente decisão! Lembre-se de conferir a cor escolhida e aplicar o cupom antes que o lote da live esgote ⏳',
+    '{user} Vi que colocou no carrinho! Essa mochila não paga despacho na ANAC e protege notebook de até 17.3" 💻🧡',
+    '{user} Show de bola! Qualquer dúvida sobre prazo de entrega ou medidas estamos ao vivo para te ajudar! 😊',
+    '{user} Aproveite que estamos ao vivo para garantir com o cupom de frete grátis liberado na sacola! 🛍️'
   ];
 
   const DEFAULT_WELCOME_TEMPLATES = [
-    '{user} Seja bem-vindo(a)! Mochila Cabine ANAC 33L a 45L com cupom e Frete Grátis na Sacola Laranja 👇',
-    '{user} Olá! Qualquer dúvida sobre medidas, notebook 17.3" ou envio em 24h é só mandar aqui no chat 😊'
+    '{user} Seja muito bem-vindo(a)! Mochila Cabine ANAC 33L a 45L com cupom na Sacola Laranja 👇',
+    '{user} Olá! Qualquer dúvida sobre medidas, cores ou notebook 17.3" é só mandar aqui no chat 😊',
+    '{user} Bem-vindo(a) à nossa live! Aproveite o frete grátis e o cupom exclusivo no Produto 1 🧡',
+    '{user} Oi! Estamos mostrando a Mochila Mala Romantic Crown original. Dúvidas sobre envio ou tecido só chamar!',
+    '{user} Seja bem-vindo(a)! Chegou na melhor hora: cupons da live liberados na Sacola Laranja 🎟️✨',
+    '{user} Olá! Procurando mochila para viagem ou trabalho? Essa cabe notebook até 17.3" e não paga despacho de bordo ✈️',
+    '{user} Bem-vindo(a)! Nossas 4 cores (Preto, Off-White, Cinza e Rosa) têm envio rápido em 24h de SP 🚚',
+    '{user} Oi! Fique à vontade para perguntar qualquer detalhe da mochila aqui no chat, respondemos na hora! 👇'
+  ];
+
+  // --- Mensagens Periódicas (CTA) Padrão com Variedade ---
+  const DEFAULT_CTA_MESSAGES = [
+    '🔥 Toque no Produto 1 na Sacola Laranja para resgatar seu Cupom Exclusivo de Live + Frete Grátis!',
+    '✈️ Padrão Cabine ANAC: viaje a bordo sem pagar taxa de despacho! Garanta a sua na Sacola Laranja 🎒',
+    '💻 Bolso acolchoado para Notebook de até 17.3", saída USB e tecido impermeável! Confira no Produto 1 👇',
+    '🎒 Qual cor você mais gostou: Preto, Branco (Off-White), Cinza ou Rosa? Digite aqui no chat! 😊',
+    '⚡ Envio Imediato em até 24h direto de São Paulo para todo o Brasil! Aproveite o estoque a pronta entrega 🚚',
+    '🔒 Segurança total: Bolso secreto antifurto nas costas e abertura 180° estilo mala de viagem! Veja na sacola 🧡',
+    '⭐ Mais de 100 mil mochilas vendidas com nota 5.0! Qualidade comprovada e garantia de 30 dias ✨',
+    '🎟️ Dica de ouro: resgate o cupom da live agora mesmo tocando no card do Produto 1 antes de acabar o estoque!',
+    '🌧️ 100% Impermeável e resistente a arranhões! Protege seu notebook e roupas em qualquer viagem ✈️',
+    '💼 Ideal para trabalho, faculdade e viagens: expande de 33L para 45L em segundos no zíper expansor!',
+    '🛍️ Quem já garantiu a sua na Sacola Laranja avisa aqui no chat pra gente comemorar com vocês! 🎉',
+    '⏳ Cupons de Frete Grátis liberados por tempo limitado na live! Não esqueça de aplicar no carrinho antes de finalizar 🛒'
   ];
 
   // Restaurar Templates de Carrinho
@@ -93,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (proactiveCartEnabled) proactiveCartEnabled.checked = true;
       if (proactiveCartCooldown) proactiveCartCooldown.value = 20;
       triggerSave();
-      showSaveToast('🛒 Fechamento de Carrinho restaurado para o padrão (Ativado, 20s).');
+      showSaveToast('🛒 Fechamento de Carrinho restaurado para o padrão completo (Ativado, 20s).');
     });
   }
 
@@ -104,7 +141,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (proactiveWelcomeEnabled) proactiveWelcomeEnabled.checked = false;
       if (proactiveWelcomeCooldown) proactiveWelcomeCooldown.value = 60;
       triggerSave();
-      showSaveToast('👋 Boas-Vindas restauradas para o padrão seguro (Desativado, 60s).');
+      showSaveToast('👋 Boas-Vindas restauradas para o padrão completo (Desativado, 60s).');
+    });
+  }
+
+  // Restaurar Mensagens de CTA
+  if (btnResetCtaMessages) {
+    btnResetCtaMessages.addEventListener('click', () => {
+      ctaMessages.value = DEFAULT_CTA_MESSAGES.join('\n');
+      triggerSave();
+      showSaveToast('📢 Mensagens de CTA restauradas para o padrão completo!');
     });
   }
 
@@ -203,10 +249,22 @@ document.addEventListener('DOMContentLoaded', () => {
       const stats = res.shopeeCopilotStats || {};
       const logs = res.shopeeCopilotLogs || [];
 
-      // Migração automática de valores legados (R$ 94,99 ou modelo 404)
+      // Migração automática de contexto e templates mais robustos
       let needsResave = false;
-      if (cfg.productContext && cfg.productContext.includes('R$ 94,99')) {
+      if (!cfg.productContext || !cfg.productContext.includes('Reputação: Nota 5.0') || cfg.productContext.includes('R$ 94,99')) {
         cfg.productContext = DEFAULT_PRODUCT_CONTEXT;
+        needsResave = true;
+      }
+      if (!Array.isArray(cfg.ctaMessages) || cfg.ctaMessages.length < 5) {
+        cfg.ctaMessages = DEFAULT_CTA_MESSAGES;
+        needsResave = true;
+      }
+      if (!Array.isArray(cfg.proactiveWelcomeTemplates) || cfg.proactiveWelcomeTemplates.length < 5) {
+        cfg.proactiveWelcomeTemplates = DEFAULT_WELCOME_TEMPLATES;
+        needsResave = true;
+      }
+      if (!Array.isArray(cfg.proactiveCartTemplates) || cfg.proactiveCartTemplates.length < 5) {
+        cfg.proactiveCartTemplates = DEFAULT_CART_TEMPLATES;
         needsResave = true;
       }
       if (!cfg.geminiModel || cfg.geminiModel === 'gemini-2.5-flash-lite') {
@@ -267,7 +325,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ctaEnabled.checked = !!cfg.ctaEnabled;
       ctaIntervalMin.value = cfg.ctaIntervalMin || 10;
       ctaPinEnabled.checked = cfg.ctaPinEnabled !== false;
-      ctaMessages.value = Array.isArray(cfg.ctaMessages) ? cfg.ctaMessages.join('\n') : (cfg.ctaMessages || '');
+      ctaMessages.value = Array.isArray(cfg.ctaMessages) ? cfg.ctaMessages.join('\n') : (cfg.ctaMessages || DEFAULT_CTA_MESSAGES.join('\n'));
 
       // Interação Proativa
       if (proactiveCartEnabled) proactiveCartEnabled.checked = cfg.proactiveCartEnabled !== false;
@@ -388,10 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ctaEnabled: ctaEnabled.checked,
       ctaIntervalMin: parseInt(ctaIntervalMin.value, 10) || 10,
       ctaPinEnabled: ctaPinEnabled.checked,
-      ctaMessages: rawCta.length > 0 ? rawCta : [
-        '🔥 Aproveite o Cupom de Frete Grátis na Sacola Laranja no Produto 1!',
-        '🎒 Mochila 45L Cabine ANAC com desconto de fábrica no carrinho!'
-      ]
+      ctaMessages: rawCta.length > 0 ? rawCta : DEFAULT_CTA_MESSAGES
     };
   }
 
@@ -546,6 +601,10 @@ document.addEventListener('DOMContentLoaded', () => {
         cfg.timerEndTime = 0;
         cfg.proactiveWelcomeEnabled = false; // Garante anti-spam para nova live
         cfg.proactiveCartEnabled = true;     // Garante alta conversão ativa
+        cfg.productContext = DEFAULT_PRODUCT_CONTEXT;
+        cfg.ctaMessages = DEFAULT_CTA_MESSAGES;
+        cfg.proactiveWelcomeTemplates = DEFAULT_WELCOME_TEMPLATES;
+        cfg.proactiveCartTemplates = DEFAULT_CART_TEMPLATES;
         if (!cfg.ctaIntervalMin || cfg.ctaIntervalMin === 3) {
           cfg.ctaIntervalMin = 10;
         }
@@ -555,6 +614,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (proactiveWelcomeEnabled) proactiveWelcomeEnabled.checked = false;
         if (proactiveCartEnabled) proactiveCartEnabled.checked = true;
         if (ctaIntervalMin) ctaIntervalMin.value = cfg.ctaIntervalMin;
+        if (productContext) productContext.value = DEFAULT_PRODUCT_CONTEXT;
+        if (ctaMessages) ctaMessages.value = DEFAULT_CTA_MESSAGES.join('\n');
+        if (proactiveWelcomeTemplates) proactiveWelcomeTemplates.value = DEFAULT_WELCOME_TEMPLATES.join('\n');
+        if (proactiveCartTemplates) proactiveCartTemplates.value = DEFAULT_CART_TEMPLATES.join('\n');
 
         chrome.storage.local.set({
           shopeeCopilotStats: emptyStats,
