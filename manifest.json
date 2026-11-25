@@ -16,6 +16,7 @@
   ],
   "host_permissions": [
     "https://live.shopee.com.br/*",
+    "https://creator.shopee.com.br/*",
     "https://generativelanguage.googleapis.com/*",
     "https://ntfy.sh/*"
   ],

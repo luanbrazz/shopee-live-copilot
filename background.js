@@ -63,9 +63,34 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 
   if (request.type === 'GET_SHOPEE_TAB') {
-    chrome.tabs.query({ url: '*://live.shopee.com.br/*' }, tabs => {
+    chrome.tabs.query({ url: ['*://live.shopee.com.br/*', '*://creator.shopee.com.br/*'] }, tabs => {
       sendResponse({ tab: tabs && tabs.length > 0 ? tabs[0] : null });
     });
+    return true;
+  }
+
+  // Centralização e persistência de Logs de Eventos
+  if (request.type === 'LOG_EVENT' && request.payload) {
+    const item = request.payload;
+    chrome.storage.local.get(['shopeeCopilotLogs'], res => {
+      let logs = Array.isArray(res.shopeeCopilotLogs) ? res.shopeeCopilotLogs : [];
+      if (!logs.some(l => l && l.id === item.id)) {
+        logs.unshift(item);
+        if (logs.length > 100) logs = logs.slice(0, 100);
+        chrome.storage.local.set({ shopeeCopilotLogs: logs });
+      }
+    });
+    // Encaminha mensagem para o sidepanel caso esteja aberto
+    chrome.runtime.sendMessage(request).catch(() => {});
+    if (sendResponse) sendResponse({ success: true });
+    return true;
+  }
+
+  // Sincronização centralizada de estatísticas
+  if (request.type === 'UPDATE_STATS' && request.payload) {
+    chrome.storage.local.set({ shopeeCopilotStats: request.payload });
+    chrome.runtime.sendMessage(request).catch(() => {});
+    if (sendResponse) sendResponse({ success: true });
     return true;
   }
 });

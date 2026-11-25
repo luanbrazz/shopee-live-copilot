@@ -613,6 +613,22 @@ button {
   border-left-color: var(--danger);
   background: rgba(239, 68, 68, 0.08);
 }
+.log-item.log-warning {
+  border-left-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+}
+.log-item.log-error {
+  border-left-color: var(--danger);
+  background: rgba(239, 68, 68, 0.12);
+}
+.log-item.log-info {
+  border-left-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.06);
+}
+.log-item.log-timer {
+  border-left-color: #06b6d4;
+  background: rgba(6, 182, 212, 0.08);
+}
 
 .log-top {
   display: flex;

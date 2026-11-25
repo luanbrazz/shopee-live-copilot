@@ -94,6 +94,10 @@
       shopeeCopilotConfig: state.config,
       shopeeCopilotStats: state.stats
     });
+    chrome.runtime.sendMessage({
+      type: 'UPDATE_STATS',
+      payload: state.stats
+    }).catch(() => {});
   }
 
   // Ouvinte de alterações do Storage em tempo real
@@ -127,6 +131,7 @@
     };
     state.processedComments.clear();
     state.processedEvents.clear();
+    if (typeof recentEventsMap !== 'undefined') recentEventsMap.clear();
     userInteractedMap.clear();
     lastCartInteractionTime = 0;
     lastWelcomeInteractionTime = 0;
@@ -143,7 +148,7 @@
     }, () => {
       updateFloatingWidget();
       logEvent('info', '🔄 Sessão Reiniciada', 'Todas as métricas da live foram zeradas com sucesso.');
-      chrome.runtime.sendMessage({ type: 'UPDATE_STATS', payload: state.stats });
+      chrome.runtime.sendMessage({ type: 'UPDATE_STATS', payload: state.stats }).catch(() => {});
     });
   }
 
@@ -212,24 +217,27 @@
   // --- Registro de Logs para a Interface ---
   function logEvent(type, title, detail) {
     const logItem = {
-      id: Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+      id: Date.now() + '_' + Math.random().toString(36).substr(2, 6),
       time: new Date().toLocaleTimeString('pt-BR'),
-      type, // 'ai', 'cart', 'sale', 'watchdog', 'timer', 'cta'
-      title,
-      detail
+      type: type || 'info', // 'ai', 'cart', 'sale', 'watchdog', 'timer', 'cta', 'warning', 'info'
+      title: String(title || ''),
+      detail: String(detail || '')
     };
 
+    // 1. Despacha mensagem imediata ao background e sidepanel
     chrome.runtime.sendMessage({
       type: 'LOG_EVENT',
       payload: logItem
     }).catch(() => {});
 
-    // Salva histórico recente no storage (máximo 50 itens)
+    // 2. Salva histórico recente no storage com proteção de concorrência (máximo 80 itens)
     chrome.storage.local.get(['shopeeCopilotLogs'], res => {
-      const logs = res.shopeeCopilotLogs || [];
-      logs.unshift(logItem);
-      if (logs.length > 50) logs.pop();
-      chrome.storage.local.set({ shopeeCopilotLogs: logs });
+      let logs = Array.isArray(res.shopeeCopilotLogs) ? res.shopeeCopilotLogs : [];
+      if (!logs.some(l => l && l.id === logItem.id)) {
+        logs.unshift(logItem);
+        if (logs.length > 80) logs = logs.slice(0, 80);
+        chrome.storage.local.set({ shopeeCopilotLogs: logs });
+      }
     });
   }
 
@@ -640,11 +648,29 @@
     }
   }
 
+  // Sistema de deduplicação com janela de tempo e WeakSet para nós DOM do virtual scroll
+  const processedNodesSet = new WeakSet();
+  const recentEventsMap = new Map(); // key -> timestamp
+
+  function isRecentEvent(key, windowMs = 4000) {
+    const now = Date.now();
+    if (recentEventsMap.has(key)) {
+      if (now - recentEventsMap.get(key) < windowMs) {
+        return true;
+      }
+    }
+    recentEventsMap.set(key, now);
+    if (recentEventsMap.size > 500) {
+      const oldestKeys = Array.from(recentEventsMap.keys()).slice(0, 100);
+      oldestKeys.forEach(k => recentEventsMap.delete(k));
+    }
+    return false;
+  }
+
   // --- Manipulação de Eventos de Conversão (Compra / Sacola) ---
   function handleCommerceEvent(type, user, details) {
-    const eventKey = `${type}_${user}_${details.substring(0, 20)}`;
-    if (state.processedEvents.has(eventKey)) return;
-    state.processedEvents.add(eventKey);
+    const eventKey = `${type}_${user}_${details.substring(0, 30)}`;
+    if (isRecentEvent(eventKey, 4000)) return;
 
     if (type === 'sale') {
       state.stats.purchasesDetected++;
@@ -771,14 +797,9 @@
     const text = (el.textContent || '').trim();
     if (!text) return;
 
+    // Deduplicação inteligente de 4 segundos para evitar re-renderização do virtual scroll
     const eventKey = 'hl_' + text;
-    if (state.processedEvents.has(eventKey)) return;
-    state.processedEvents.add(eventKey);
-
-    if (state.processedEvents.size > 500) {
-      const oldestKeys = Array.from(state.processedEvents.keys()).slice(0, 100);
-      oldestKeys.forEach(k => state.processedEvents.delete(k));
-    }
+    if (isRecentEvent(eventKey, 4000)) return;
 
     const lower = text.toLowerCase();
     let user = '';
@@ -802,6 +823,7 @@
     // 3. Entrada Direta pelo Produto (ex: "entrou na live por N° 1")
     const isFromItemAttr = el.getAttribute('data-is-from-item') === 'true' || !!el.closest('[data-is-from-item="true"]');
     if (lower.includes('entrou na live por') || isFromItemAttr) {
+      logEvent('proactive', '🎯 Entrada pelo Produto', text);
       trySendProactiveMessage('product_entry', user, text);
       return;
     }
@@ -816,11 +838,15 @@
   // --- Distribuidor Central de Elementos do Chat Virtualizado ---
   function processElement(el) {
     if (!el || el.nodeType !== 1) return;
+    if (processedNodesSet.has(el)) return;
+    processedNodesSet.add(el);
 
     const isHighlight = el.classList.contains('highlight-item_246ff') ||
+                        el.classList.contains('purchase-item_c852a') ||
                         !!el.querySelector('[class*="highlight-item_"]') ||
+                        !!el.querySelector('[class*="purchase-item_"]') ||
                         el.getAttribute('data-comment-id') === 'false' ||
-                        (el.textContent && /entrou!|entraram!|comprando|ao carrinho/i.test(el.textContent));
+                        (el.textContent && /entrou!|entraram!|comprando|ao carrinho|comprou/i.test(el.textContent));
 
     if (isHighlight) {
       processHighlightElement(el);
@@ -911,6 +937,7 @@
     if (chatObserver) chatObserver.disconnect();
 
     console.log('[ShopeeCopilot] Conectando MutationObserver ao chat da Shopee Live!');
+    logEvent('info', '🚀 Copilot Ativo', 'Monitoramento da Shopee Live conectado e ativo.');
 
     // Processa itens já presentes inicialmente
     container.childNodes.forEach(child => {

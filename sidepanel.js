@@ -115,9 +115,34 @@ document.addEventListener('DOMContentLoaded', () => {
       tabPanes.forEach(p => p.classList.remove('active'));
 
       btn.classList.add('active');
-      const targetPane = document.getElementById(btn.getAttribute('data-tab'));
+      const targetTab = btn.getAttribute('data-tab');
+      const targetPane = document.getElementById(targetTab);
       if (targetPane) targetPane.classList.add('active');
+
+      // Ao abrir a aba de logs, força recarregamento imediato do storage
+      if (targetTab === 'tab-logs') {
+        chrome.storage.local.get(['shopeeCopilotLogs'], res => {
+          renderLogs(res.shopeeCopilotLogs || []);
+        });
+      }
     });
+  });
+
+  // Atualização em primeiro plano ao focar no sidepanel
+  window.addEventListener('focus', () => {
+    chrome.storage.local.get(['shopeeCopilotStats', 'shopeeCopilotLogs'], res => {
+      if (res.shopeeCopilotStats) updateStatsUI(res.shopeeCopilotStats);
+      if (res.shopeeCopilotLogs) renderLogs(res.shopeeCopilotLogs);
+    });
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+      chrome.storage.local.get(['shopeeCopilotStats', 'shopeeCopilotLogs'], res => {
+        if (res.shopeeCopilotStats) updateStatsUI(res.shopeeCopilotStats);
+        if (res.shopeeCopilotLogs) renderLogs(res.shopeeCopilotLogs);
+      });
+    }
   });
 
   // Alternar Visibilidade da API Key
@@ -280,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderLogs(logs) {
     if (!logsList) return;
-    activeLogs = Array.isArray(logs) ? logs : [];
+    activeLogs = Array.isArray(logs) ? logs.filter(item => item && item.title) : [];
 
     if (activeLogs.length === 0) {
       logsList.innerHTML = '<div class="empty-logs">Nenhum evento registrado ainda. O monitoramento está ativo na Shopee Live.</div>';
@@ -295,6 +320,9 @@ document.addEventListener('DOMContentLoaded', () => {
       else if (item.type === 'proactive') typeClass = 'log-proactive';
       else if (item.type === 'cta') typeClass = 'log-cta';
       else if (item.type === 'watchdog') typeClass = 'log-watchdog';
+      else if (item.type === 'warning') typeClass = 'log-warning';
+      else if (item.type === 'error') typeClass = 'log-error';
+      else if (item.type === 'timer') typeClass = 'log-timer';
 
       return `
         <div class="log-item ${typeClass}">
@@ -553,10 +581,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Ouvinte de Mensagens em Tempo Real da Extensão ---
   chrome.runtime.onMessage.addListener(msg => {
     if (msg.type === 'LOG_EVENT' && msg.payload) {
-      // Adiciona o novo evento no topo da lista imediatamente (zero delay de I/O)
-      activeLogs.unshift(msg.payload);
-      if (activeLogs.length > 60) activeLogs.pop();
-      renderLogs(activeLogs);
+      const item = msg.payload;
+      if (!activeLogs.some(l => l && l.id === item.id)) {
+        activeLogs.unshift(item);
+        if (activeLogs.length > 80) activeLogs.pop();
+        renderLogs(activeLogs);
+      }
     } else if (msg.type === 'UPDATE_STATS') {
       updateStatsUI(msg.payload || {});
     }
