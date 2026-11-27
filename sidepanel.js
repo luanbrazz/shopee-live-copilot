@@ -64,64 +64,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveStatus = document.getElementById('saveStatus');
   const btnForceSave = document.getElementById('btnForceSave');
 
-  // --- Contexto Padrão da Mochila Romantic Crown 42L/45L Shopee (Ultra Robusto) ---
-  const DEFAULT_PRODUCT_CONTEXT = `PRODUTO PRINCIPAL DA LIVE (ROMANTIC CROWN ORIGINAL):
-- Nome Oficial: Mochila de Viagem Expansível Executiva Romantic Crown (Mochila Mala 45L Cabine ANAC).
-- Reputação: Nota 5.0 estrelas, mais de 55 mil avaliações positivas e mais de 100 mil unidades vendidas!
-- Padrão Cabine ANAC (Mala de Bordo): Medidas 45 x 32 x 22 cm (expandida) e 45 x 32 x 12 cm (compacta). 100% aprovada para viajar a bordo de avião como bagagem de mão/cabine sem pagar taxa de despacho! Cabe no bagageiro superior e abaixo do assento.
-- Capacidade Expansível: De 33L para 45L pelo zíper expansor (+10cm de profundidade). Super espaçosa para roupas de 3 a 5 dias de viagem.
-- Cores Disponíveis: Preto, Branco (Off-White), Cinza e Rosa. Todas a pronta entrega na Sacola Laranja.
-- Compartimento para Notebook: Bolso acolchoado especial para notebook de até 17,3 polegadas e tablet/iPad, com trava de segurança elástica.
-- Porta USB Externa: Conector USB lateral para carregar celular na rua (acompanha cabo interno para plugar no powerbank).
-- Impermeabilidade e Material: Tecido Poliéster Oxford premium impermeável resistente à chuva, respingos e arranhões. Zíperes duplos de metal reforçados.
-- Abertura 180° Estilo Mala: Abre completamente como mala de viagem para arrumar roupas com facilidade e passar no raio-X de aeroportos.
-- Alça para Mala de Rodinhas: Faixa traseira resistente para acoplar no puxador da mala de viagem.
-- Bolso Antifurto: Bolso oculto nas costas com zíper seguro para guardar passaporte, celular, carteira e dinheiro.
-- Conforto Ergonômico: Costas e alças acolchoadas com tecido respirável antitranspirante (malha aerada) que alivia o peso nos ombros.
-- Divisórias Internas: Bolsos organizadores para cabos, canetas, documentos e bolso impermeável para itens úmidos ou necessaire.
-- Público e Uso: Unissex (masculino e feminino). Perfeita para trabalho executivo, faculdade, viagens de avião, negócios e passeios.
-- Origem e Envio: Estoque próprio a pronta entrega no Brasil, envio ultra-rápido direto de São Paulo (SP) em até 24 horas úteis.
-- Garantia: 30 dias de garantia do vendedor contra qualquer defeito + Garantia Shopee de recebimento seguro.
-- REGRA CRÍTICA DE PREÇO: NUNCA informe valores fixos em R$. Oriente sempre o cliente a abrir a Sacola Laranja (Produto 1) para resgatar o Cupom Exclusivo da Live + Frete Grátis e ver o valor final com desconto no carrinho!`;
-
-  // --- Templates Padrão de Interação Proativa ---
-  const DEFAULT_CART_TEMPLATES = [
-    '{user} Vi que você garantiu na sacola! Aproveite o cupom da live + Frete Grátis antes de finalizar no carrinho 🛒✨',
-    '{user} Ótima escolha! Nossa mochila tem envio rápido de SP em até 24h e garantia de 30 dias. Qualquer dúvida só chamar 👇',
-    '{user} Dica: resgate o cupom exclusivo da live na Sacola Laranja para garantir o melhor desconto no seu pedido! 🎟️',
-    '{user} Parabéns pela escolha! A Romantic Crown original tem abertura 180° estilo mala e bolso antifurto ✈️',
-    '{user} Excelente decisão! Lembre-se de conferir a cor escolhida e aplicar o cupom antes que o lote da live esgote ⏳',
-    '{user} Vi que colocou no carrinho! Essa mochila não paga despacho na ANAC e protege notebook de até 17.3" 💻🧡',
-    '{user} Show de bola! Qualquer dúvida sobre prazo de entrega ou medidas estamos ao vivo para te ajudar! 😊',
-    '{user} Aproveite que estamos ao vivo para garantir com o cupom de frete grátis liberado na sacola! 🛍️'
-  ];
-
-  const DEFAULT_WELCOME_TEMPLATES = [
-    '{user} Seja muito bem-vindo(a)! Mochila Cabine ANAC 33L a 45L com cupom na Sacola Laranja 👇',
-    '{user} Olá! Qualquer dúvida sobre medidas, cores ou notebook 17.3" é só mandar aqui no chat 😊',
-    '{user} Bem-vindo(a) à nossa live! Aproveite o frete grátis e o cupom exclusivo no Produto 1 🧡',
-    '{user} Oi! Estamos mostrando a Mochila Mala Romantic Crown original. Dúvidas sobre envio ou tecido só chamar!',
-    '{user} Seja bem-vindo(a)! Chegou na melhor hora: cupons da live liberados na Sacola Laranja 🎟️✨',
-    '{user} Olá! Procurando mochila para viagem ou trabalho? Essa cabe notebook até 17.3" e não paga despacho de bordo ✈️',
-    '{user} Bem-vindo(a)! Nossas 4 cores (Preto, Off-White, Cinza e Rosa) têm envio rápido em 24h de SP 🚚',
-    '{user} Oi! Fique à vontade para perguntar qualquer detalhe da mochila aqui no chat, respondemos na hora! 👇'
-  ];
-
-  // --- Mensagens Periódicas (CTA) Padrão com Variedade ---
-  const DEFAULT_CTA_MESSAGES = [
-    '🔥 Toque no Produto 1 na Sacola Laranja para resgatar seu Cupom Exclusivo de Live + Frete Grátis!',
-    '✈️ Padrão Cabine ANAC: viaje a bordo sem pagar taxa de despacho! Garanta a sua na Sacola Laranja 🎒',
-    '💻 Bolso acolchoado para Notebook de até 17.3", saída USB e tecido impermeável! Confira no Produto 1 👇',
-    '🎒 Qual cor você mais gostou: Preto, Branco (Off-White), Cinza ou Rosa? Digite aqui no chat! 😊',
-    '⚡ Envio Imediato em até 24h direto de São Paulo para todo o Brasil! Aproveite o estoque a pronta entrega 🚚',
-    '🔒 Segurança total: Bolso secreto antifurto nas costas e abertura 180° estilo mala de viagem! Veja na sacola 🧡',
-    '⭐ Mais de 100 mil mochilas vendidas com nota 5.0! Qualidade comprovada e garantia de 30 dias ✨',
-    '🎟️ Dica de ouro: resgate o cupom da live agora mesmo tocando no card do Produto 1 antes de acabar o estoque!',
-    '🌧️ 100% Impermeável e resistente a arranhões! Protege seu notebook e roupas em qualquer viagem ✈️',
-    '💼 Ideal para trabalho, faculdade e viagens: expande de 33L para 45L em segundos no zíper expansor!',
-    '🛍️ Quem já garantiu a sua na Sacola Laranja avisa aqui no chat pra gente comemorar com vocês! 🎉',
-    '⏳ Cupons de Frete Grátis liberados por tempo limitado na live! Não esqueça de aplicar no carrinho antes de finalizar 🛒'
-  ];
+  const {
+    DEFAULT_PRODUCT_CONTEXT,
+    DEFAULT_CART_TEMPLATES,
+    DEFAULT_WELCOME_TEMPLATES,
+    DEFAULT_CTA_MESSAGES,
+    migrateCopilotConfig
+  } = window.SHOPEE_COPILOT_DEFAULTS;
 
   // Restaurar Templates de Carrinho
   if (btnResetCartTemplates) {
@@ -250,23 +199,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const logs = res.shopeeCopilotLogs || [];
 
       // Migração automática de contexto e templates mais robustos
-      let needsResave = false;
-      if (!cfg.productContext || !cfg.productContext.includes('Reputação: Nota 5.0') || cfg.productContext.includes('R$ 94,99')) {
-        cfg.productContext = DEFAULT_PRODUCT_CONTEXT;
-        needsResave = true;
-      }
-      if (!Array.isArray(cfg.ctaMessages) || cfg.ctaMessages.length < 5) {
-        cfg.ctaMessages = DEFAULT_CTA_MESSAGES;
-        needsResave = true;
-      }
-      if (!Array.isArray(cfg.proactiveWelcomeTemplates) || cfg.proactiveWelcomeTemplates.length < 5) {
-        cfg.proactiveWelcomeTemplates = DEFAULT_WELCOME_TEMPLATES;
-        needsResave = true;
-      }
-      if (!Array.isArray(cfg.proactiveCartTemplates) || cfg.proactiveCartTemplates.length < 5) {
-        cfg.proactiveCartTemplates = DEFAULT_CART_TEMPLATES;
-        needsResave = true;
-      }
+      const migrated = migrateCopilotConfig(cfg);
+      cfg = migrated.config;
+      let needsResave = migrated.changed;
       if (!cfg.geminiModel || cfg.geminiModel === 'gemini-2.5-flash-lite') {
         cfg.geminiModel = 'gemini-flash-lite-latest';
         needsResave = true;
@@ -602,9 +537,10 @@ document.addEventListener('DOMContentLoaded', () => {
         cfg.proactiveWelcomeEnabled = false; // Garante anti-spam para nova live
         cfg.proactiveCartEnabled = true;     // Garante alta conversão ativa
         cfg.productContext = DEFAULT_PRODUCT_CONTEXT;
-        cfg.ctaMessages = DEFAULT_CTA_MESSAGES;
-        cfg.proactiveWelcomeTemplates = DEFAULT_WELCOME_TEMPLATES;
-        cfg.proactiveCartTemplates = DEFAULT_CART_TEMPLATES;
+        cfg.ctaMessages = [...DEFAULT_CTA_MESSAGES];
+        cfg.proactiveWelcomeTemplates = [...DEFAULT_WELCOME_TEMPLATES];
+        cfg.proactiveCartTemplates = [...DEFAULT_CART_TEMPLATES];
+        cfg.v7MessagesMerged = true;
         if (!cfg.ctaIntervalMin || cfg.ctaIntervalMin === 3) {
           cfg.ctaIntervalMin = 10;
         }
