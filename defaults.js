@@ -73,36 +73,32 @@
 
   // --- Mensagens Periódicas e Fixas (CTA / "Marcar") ---
   const DEFAULT_CTA_MESSAGES = [
+    // 10 Gatilhos V7 MAIS AGRESSIVOS (Urgência, Escassez, Aversão à Perda e Perguntas de Alta Conversão)
+    '⚠️ ATENÇÃO: Quem sair da live sem colocar no carrinho VAI PAGAR O DOBRO amanhã! O cupom de fábrica cai assim que a transmissão fechar. Toca na 🛍️ Sacola Laranja -> Produto 1 AGORA!',
+    '✈️ Uma única taxa de despacho no aeroporto custa R$ 180+! Essa mochila cabine ANAC sai mais barato que UMA taxa e vai de graça na Gol, Latam e Azul. Garanta no Produto 1!',
+    '🔥 ALERTA DE ESTOQUE: Mais de 80% do lote promocional já foi reservado! Se continuar só olhando, outro comprador leva a última unidade da sua cor. Corre na Sacola Laranja -> Produto 1!',
+    '🚨 As cores PRETO EXECUTIVO e CINZA CHUMBO estão quase zerando ao vivo! Qual cor você prefere (Preto, Cinza, Off-White ou Rosa)? Comenta aqui e já trava a sua no Produto 1!',
+    '💬 Ei, você que tá assistindo em silêncio: qual é a sua única dúvida para não garantir a sua hoje? Tamanho, notebook, frete ou cor? Manda aqui no chat que respondo na hora!',
+    '⏳ CONTAGEM REGRESSIVA: O cupom de Frete Grátis + Desconto da Shopee Live pode expirar na sua tela a qualquer segundo! Clica no Produto 1 agora e confere na finalização antes que suma!',
+    '🌧️ Quem aqui já rasgou mochila barata no meio da viagem ou molhou tudo na chuva? Comenta EU no chat! Para de gastar dinheiro 2x: essa tem Oxford Militar 100% impermeável. Garanta no Produto 1!',
+    '🧳 Cabe notebook até 17.3" + roupa pra 1 semana inteira (expande de 33L pra 45L)! Tem dúvida se cabe o SEU notebook? Manda a marca/modelo aqui no chat que eu confirmo agora!',
+    '📦 Pediu na live = envio prioritário em até 24h úteis + Risco Zero com Garantia Shopee de 7 dias! Não perde o cupom ativo agora no Produto 1 da Sacola Laranja!',
+    '⚡ ÚLTIMOS MINUTOS desse lote de fábrica na Shopee! Se você fechar a live sem garantir o Produto 1 na Sacola Laranja, vai perder dinheiro na certa. Toca no botão laranja e garante já a sua!',
+    // Gatilhos complementares
     '🔥 Toque no Produto 1 na Sacola Laranja para resgatar seu Cupom Exclusivo de Live + Frete Grátis!',
     '✈️ Padrão Cabine ANAC: viaje a bordo sem pagar taxa de despacho! Garanta a sua na Sacola Laranja 🎒',
     '💻 Bolso acolchoado para Notebook de até 17.3", saída USB e tecido impermeável! Confira no Produto 1 👇',
-    '🎒 Qual cor você mais gostou: Preto, Branco (Off-White), Cinza ou Rosa? Digite aqui no chat! 😊',
-    '⚡ Envio Imediato em até 24h direto de São Paulo para todo o Brasil! Aproveite o estoque a pronta entrega 🚚',
     '🔒 Segurança total: Bolso secreto antifurto nas costas e abertura 180° estilo mala de viagem! Veja na sacola 🧡',
     '⭐ Mais de 100 mil mochilas vendidas com nota 5.0! Qualidade comprovada e garantia de 30 dias ✨',
-    '🎟️ Dica de ouro: resgate o cupom da live agora mesmo tocando no card do Produto 1 antes de acabar o estoque!',
-    '🌧️ 100% Impermeável e resistente a arranhões! Protege seu notebook e roupas em qualquer viagem ✈️',
-    '💼 Ideal para trabalho, faculdade e viagens: expande de 33L para 45L em segundos no zíper expansor!',
-    '🛍️ Quem já garantiu a sua na Sacola Laranja avisa aqui no chat pra gente comemorar com vocês! 🎉',
-    '⏳ Cupons de Frete Grátis liberados por tempo limitado na live! Não esqueça de aplicar no carrinho antes de finalizar 🛒',
-    // Gatilhos V7 (Alternando Escassez/Urgência com Perguntas de Engajamento)
-    '⚠️ ATENÇÃO: Quem sair sem pôr no carrinho VAI PAGAR O DOBRO amanhã! O cupom cai ao fechar a live. Toca na 🛍️ Sacola Laranja -> Produto 1 AGORA!',
-    '🚨 PRETO EXECUTIVO e CINZA CHUMBO quase zerando ao vivo! Qual cor prefere (Preto, Cinza, Off-White ou Rosa)? Comenta e trava no Produto 1!',
-    '✈️ Uma taxa de despacho custa R$ 180+! Essa mochila ANAC sai mais barato e vai de graça na Gol, Latam e Azul. Garanta no Produto 1!',
-    '💬 Ei, você assistindo em silêncio: qual sua dúvida pra não garantir hoje? Tamanho, notebook, frete ou cor? Manda no chat que respondo agora!',
-    '🔥 ALERTA DE ESTOQUE: +80% do lote promocional já reservado! Se só olhar, outro leva sua cor. Corre na 🛍️ Sacola Laranja -> Produto 1!',
-    '🌧️ Já rasgou mochila na viagem ou molhou tudo na chuva? Comenta EU! Essa é Oxford Militar 100% impermeável. Garanta no Produto 1!',
-    '⏳ CONTAGEM REGRESSIVA: O cupom de Frete Grátis + Desconto da Shopee Live pode expirar já! Clica no Produto 1 e confira antes que suma!',
-    '🧳 Cabe notebook até 17.3" + roupa pra 1 semana (expande 33L pra 45L)! Dúvida se cabe o SEU notebook? Manda a marca/modelo aqui no chat!',
-    '📦 Pediu na live = envio prioritário em até 24h úteis + Risco Zero com Garantia Shopee de 7 dias! Aproveite o cupom no Produto 1 da Sacola!',
-    '⚡ ÚLTIMOS MINUTOS desse lote de fábrica na Shopee! Sair sem garantir o Produto 1 na Sacola Laranja é perder dinheiro. Toca no botão laranja!'
+    '💼 Ideal para trabalho, faculdade e viagens: expande de 33L para 45L em segundos no zíper expansor!'
   ];
 
-  function appendMissingDefaults(existingList, defaultList) {
-    const base = Array.isArray(existingList) ? existingList.filter(Boolean) : [];
-    const seen = new Set(base);
-    const merged = [...base];
-    defaultList.forEach(item => {
+  function appendMissingDefaults(primaryList, secondaryList) {
+    const list1 = Array.isArray(primaryList) ? primaryList.filter(Boolean) : [];
+    const list2 = Array.isArray(secondaryList) ? secondaryList.filter(Boolean) : [];
+    const seen = new Set();
+    const merged = [];
+    [...list1, ...list2].forEach(item => {
       if (!seen.has(item)) {
         seen.add(item);
         merged.push(item);
@@ -126,8 +122,8 @@
     if (!Array.isArray(next.ctaMessages) || next.ctaMessages.length < 5) {
       next.ctaMessages = [...DEFAULT_CTA_MESSAGES];
       changed = true;
-    } else if (!next.v7MessagesMigrated) {
-      next.ctaMessages = appendMissingDefaults(next.ctaMessages, DEFAULT_CTA_MESSAGES);
+    } else if (!next.v7AgressivoMessagesMigrated) {
+      next.ctaMessages = appendMissingDefaults(DEFAULT_CTA_MESSAGES, next.ctaMessages);
       changed = true;
     }
 
@@ -149,6 +145,11 @@
 
     if (!next.v7MessagesMigrated) {
       next.v7MessagesMigrated = true;
+      changed = true;
+    }
+
+    if (!next.v7AgressivoMessagesMigrated) {
+      next.v7AgressivoMessagesMigrated = true;
       changed = true;
     }
 
